@@ -1,0 +1,56 @@
+.clearfix {
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}
+
+.container:after {
+  .clearfix
+}
+
+.container {
+  display: inline-block;
+  position: relative;
+}
+
+.waiting {
+  background-color: #ccc;
+}
+
+.expanded {
+  background-color: #333;
+  transition: transform .3s linear;
+}
+
+.shrinking {
+  background-color: blue;
+}
+
+.lp_rd_mask {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 5px;
+  top: 0;
+  left: 0;
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+}
+
+.lp_rd_mask:after {
+  .clearfix
+}
+
+.lp_drop {
+  z-index: 5;
+  transition: opacity .5s linear, transform .5s ease-in;
+  opacity: 0;
+  display: block;
+  position: absolute;
+  will-change: transform, opacity, width, height;
+  border-radius: 50% 50%;
+}
