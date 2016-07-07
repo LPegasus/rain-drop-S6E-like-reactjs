@@ -7,7 +7,7 @@ import Rd from './rd/rd';
 ReactDOM.render(
   <Rd>
     <div style={{ display: 'inline-block', height: 50,
-      lineHeight: '50px', padding: 0, margin: 0, backgroundColor: '#eee',
+      lineHeight: '50px', padding: 0, margin: 0, backgroundColor: '#333',
       textAlign: 'center', width: 100 }}>
         123
     </div>

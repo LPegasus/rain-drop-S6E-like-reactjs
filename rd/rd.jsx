@@ -1,6 +1,6 @@
 import styles from './rd.less';
 import classNames from 'classnames';
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import RainDrop from './raindrop';
 
 const isTouch = 'ontouchstart' in window;
@@ -33,7 +33,7 @@ const getPosition = (e) => {
 };
 
 export const STATUS = enumFactory({
-  waiting: 1, active: 2, expanded: 3, distroy: 4
+  waiting: 1, active: 2, expanded: 3, destroy: 4
 });
 
 class Rd extends Component {
@@ -41,36 +41,74 @@ class Rd extends Component {
     super(props);
     this.state = {
       drops: [],
-      cnt: 0
+      cnt: 0,
+      width: null,
+      height: null,
+      showMask: false,
+      hidingMask: false,
     };
+    let time;
     this.onMouseDown = (e) => {
+      time = Date.now();
       const pos = getPosition(e);
-      console.log(pos);
-      this.setState({ drops: this.state.drops.concat([
-        <RainDrop key={this.state.cnt++} x={e.pageX} y={e.pageY} />
-      ]) });
+      const rd = {
+        key: this.state.cnt++,
+        x: pos.x, y: pos.y, w: this.state.width, h: this.state.height,
+        destroy: false
+      };
+      this.setState({ drops: this.state.drops.concat([rd]), showMask: true });
     };
-/*
+    this.delayHandle = [];
     this.onMouseUp = () => {
+      //  记录当前key值，在后续异步清除时排除掉新生成DOM
+      const num = this.state.cnt;
+
       this.setState({
-        drops: this.state.drops.filter(
-          (d) => d.status <= STATUS.expanded
-        ).map(() => ({
-          status: STATUS.distroy
-        }))
+        drops: this.state.drops.map((d) => {
+          return Object.assign({}, d, { destroy: true });
+        }),
+        showMask: false,
+        hidingMask: (Date.now() - time) > 100,
       });
+
+      setTimeout(() => {
+        this.setState({
+          drops: this.state.drops.filter((d) => d.key >= num),
+          hidingMask: false,
+        });
+      }, 500);
     };
-    */
+    let evtname = isTouch ? 'touchend' : 'mouseup';
+    window.addEventListener(evtname, this.onMouseUp, true);
+  }
+
+  componentDidMount() {
+    const c = this.refs.c;
+    const { width, height } = c.getBoundingClientRect();
+    this.state.width = width;
+    this.state.height = height;
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mouseup', this.onMouseUp, true);
   }
 
   render() {
+    const evtProp = { [isTouch ? 'onTouchStart' : 'onMouseDown']: this.onMouseDown };
     return (
       <div className={classNames(styles.container)}
-        onMouseDown={this.onMouseDown}
-        onMouseUp={this.onMouseUp}
+        {...evtProp}
       >
-        {this.props.children}
-        {this.state.drops.map((d) => d)}
+        <div ref="c">{this.props.children}</div>
+        {
+          this.state.showMask || this.state.hidingMask ?
+            <div className={classNames(styles.lp_rd_mask, {
+              [styles.hidingmask]: this.state.hidingMask
+            })}>
+              {this.state.drops.map((d) => <RainDrop {...d} />)}
+            </div>
+            : null
+        }
       </div>
     );
   }

@@ -13,19 +13,7 @@
 .container {
   display: inline-block;
   position: relative;
-}
-
-.waiting {
-  background-color: #ccc;
-}
-
-.expanded {
-  background-color: #333;
-  transition: transform .3s linear;
-}
-
-.shrinking {
-  background-color: blue;
+  opacity: 1;
 }
 
 .lp_rd_mask {
@@ -38,6 +26,7 @@
   border-radius: 5px;
   top: 0;
   left: 0;
+  background-color: rgba(250,250,250,.2);
   -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
 }
 
@@ -45,12 +34,41 @@
   .clearfix
 }
 
+.translate2center {
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.translateAndexpanded {
+  transform: translate3d(-50%, -50%, 0) scale3d(1, 1, 1);
+}
+
 .lp_drop {
-  z-index: 5;
-  transition: opacity .5s linear, transform .5s ease-in;
-  opacity: 0;
+  z-index: 99999;
+  transition: opacity .3s linear, transform 1s ease-in;
   display: block;
   position: absolute;
   will-change: transform, opacity, width, height;
   border-radius: 50% 50%;
+  background-color: rgba(0,0,0,.3);
+}
+
+.expanded, .active {
+  transform: scale3d(1,1,1);
+  .translateAndexpanded
+}
+
+.waiting {
+  opacity: 1;
+  transform: translate3d(-50%, -50%, 0) scale3d(0, 0, 0);
+}
+
+.destroy {
+  transition: transform 1s, opacity .5s;
+  opacity: 0;
+  .translateAndexpanded
+}
+
+.hidingmask {
+  opacity: 0;
+  transition: opacity .5s;
 }
