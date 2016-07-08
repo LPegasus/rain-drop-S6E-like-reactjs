@@ -4,7 +4,7 @@ var webpack = require('webpack');
 var config = {
   entry: path.join(__dirname, "./main.js"),
   output: {
-    path: './',
+    path: path.join(__dirname, 'dist'),
     filename: 'index.js',
   },
 
@@ -12,6 +12,7 @@ var config = {
     inline: true,
     port: 7777
   },
+  devtool: "#cheap-source-map",
 
   module: {
     loaders: [{
@@ -94,8 +95,18 @@ var config = {
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    root: './rd'
-  }
+    root: path.resolve('rd'),
+    modulesDirectories: ['node_modules']
+  },
+  plugins: [
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      /**
+       * 在这里引入 manifest 文件
+       */
+      manifest: require('./dist/react-manifest.json')
+    })
+  ]
 }
 
 module.exports = config;
