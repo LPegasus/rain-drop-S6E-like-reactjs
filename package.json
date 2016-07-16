@@ -44,6 +44,7 @@
   ],
   "scripts": {
     "lint": "eslint --ext .js,.jsx src",
-    "start": "webpack-dev-server --hot"
+    "start": "webpack-dev-server --hot",
+    "dll": "webpack --config webpack.dll.config.js"
   }
 }
